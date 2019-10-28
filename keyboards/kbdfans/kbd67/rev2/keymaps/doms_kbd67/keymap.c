@@ -23,11 +23,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case DRUGGERI:
       if (record->event.pressed) {
 		uint8_t shifted = get_mods() & (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT));
+    uint8_t ctrld = get_mods() & (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL));
 		if (shifted) {
 			uint8_t mods = get_mods();
 			clear_mods();
 			SEND_STRING("EAS\\druggeri$$"SS_TAP(X_TAB));
 			set_mods(mods);
+      } else if (ctrld) {
+        uint8_t mods = get_mods();
+			  clear_mods();
+			  SEND_STRING("druggeri1@ellsworth.onmicrosoft.com"SS_TAP(X_TAB));
+			  set_mods(mods);
       } else {
 		  SEND_STRING("druggeri$$"SS_TAP(X_TAB));
       }
