@@ -5,6 +5,7 @@ uint16_t alt_tab_timer = 0;
 
 enum custom_keycodes {
   ALT_TAB = SAFE_RANGE,
+  ONE
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -19,6 +20,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         register_code(KC_TAB);
       } else {
         unregister_code(KC_TAB);
+      }
+      break;
+
+    case ONE:
+      if (record->event.pressed) {
+        SEND_STRING("One!");
+      } else {
       }
       break;
   }
@@ -71,17 +79,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
 	[5] = LAYOUT_ortho_4x4(
-    KC_P7, KC_P8, KC_P9,   LT(6, KC_BSPC), 
+    KC_P7, KC_P8, KC_P9,   KC_BSPC, 
     KC_P4, KC_P5, KC_P6,   KC_PPLS, 
     KC_P1, KC_P2, KC_P3,   KC_PMNS, 
-    KC_P0, KC_P0, KC_PDOT, KC_PENT
+    KC_P0, KC_P0, KC_PDOT, LT(6, KC_PENT)
     ),
 
   [6] = LAYOUT_ortho_4x4(
-    TO(0), KC_NLCK, KC_P9,   KC_TRNS, 
-    KC_P4, KC_P5,   KC_P6,   KC_PPLS, 
-    KC_P1, KC_P2,   KC_P3,   KC_PMNS, 
-    KC_P0, KC_P0,   KC_PDOT, KC_PENT
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+    TO(0),   KC_NLCK, ONE,     KC_TRNS
     )
 
 };
