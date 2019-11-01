@@ -1,17 +1,17 @@
 #include QMK_KEYBOARD_H
 
+// Layers
 #define _DEFAULT 0
 #define _FUNC 1
 #define _LEDS 2
 
-bool is_alt_tab_active = false;
-uint16_t alt_tab_timer = 0;
-
+// Enum Tap Dances
 enum {
-  TD_ESC_CMD = 0,
+  TD_ESC_LOCK = 0,
   TD_QUOTE,
 };
 
+// Enum Macros
 enum custom_keycodes {
   DRUGGERI = SAFE_RANGE,
   NOTEPAD,
@@ -21,35 +21,42 @@ enum custom_keycodes {
   RBRC
 };
 
+// Set Alt-Tab Timer and State
+bool is_alt_tab_active = false;
+uint16_t alt_tab_timer = 0;
+
+// Macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case DRUGGERI:
       if (record->event.pressed) {
-		uint8_t shifted = get_mods() & (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT));
-    uint8_t ctrld = get_mods() & (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL));
-		if (shifted) {
-			uint8_t mods = get_mods();
-			clear_mods();
-			SEND_STRING("EAS\\druggeri$$"SS_TAP(X_TAB));
-			set_mods(mods);
-      } else if (ctrld) {
-        uint8_t mods = get_mods();
+	    	uint8_t shifted = get_mods() & (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT));
+        uint8_t ctrld = get_mods() & (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL));
+		  if (shifted) {
+			  uint8_t mods = get_mods();
 			  clear_mods();
-			  SEND_STRING("druggeri1@ellsworth.onmicrosoft.com"SS_TAP(X_TAB));
+			  SEND_STRING("EAS\\druggeri$$"SS_TAP(X_TAB));
 			  set_mods(mods);
+      } else if (ctrld) {
+          uint8_t mods = get_mods();
+          clear_mods();
+          SEND_STRING("druggeri1@ellsworth.onmicrosoft.com"SS_TAP(X_ENTER));
+          set_mods(mods);
       } else {
-		  SEND_STRING("druggeri$$"SS_TAP(X_TAB));
+		    SEND_STRING("druggeri$$"SS_TAP(X_TAB));
       }
-	  } else {
-      }
-      break;
+      return true;
+	  }
 
 	case NOTEPAD:
       if (record->event.pressed) {
-        SEND_STRING(SS_TAP(X_LGUI)"notepad"SS_TAP(X_ENTER));
-      } else {
+        SEND_STRING(SS_TAP(X_LGUI));
+        alt_tab_timer = timer_read();
+        SEND_STRING("notepad");
+        alt_tab_timer = timer_read();
+        SEND_STRING(SS_TAP(X_ENTER));
+        return true;
       }
-      break;
 
 	case LBRC:
       if (record->event.pressed) {
@@ -65,7 +72,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             unregister_mods(MOD_LSFT);
         }
     }
-	return false;
+	return true;
 
 	case RBRC:
       if (record->event.pressed) {
@@ -81,7 +88,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             unregister_mods(MOD_LSFT);
         }
     }
-	return false;
+	return true;
 
 	case CTRL_CTV:
 	  if (record->event.pressed) {
@@ -99,6 +106,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         alt_tab_timer = timer_read();
         register_code(KC_TAB);
       } else {
+        register_code(KC_LALT);
         unregister_code(KC_TAB);
       }
       break;
@@ -109,7 +117,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 void matrix_scan_user(void) {
   if (is_alt_tab_active) {
-    if (timer_elapsed(alt_tab_timer) > 1500) {
+    if (timer_elapsed(alt_tab_timer) > 3000) {
       unregister_code(KC_LALT);
       is_alt_tab_active = false;
     }
@@ -120,8 +128,8 @@ void dance_cmd_finished (qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     register_code (KC_ESC);
   } else {
-	register_code (KC_LCTL);
-    register_code (KC_GRV);
+	  register_code (KC_LGUI);
+    register_code (KC_L);
   }
 }
 
@@ -129,8 +137,8 @@ void dance_cmd_reset (qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     unregister_code (KC_ESC);
   } else {
-	unregister_code (KC_LCTL);
-    unregister_code (KC_GRV);
+	unregister_code (KC_LGUI);
+    unregister_code (KC_L);
   }
 }
 
@@ -186,18 +194,18 @@ void led_set_user(uint8_t usb_led) {
 
 qk_tap_dance_action_t tap_dance_actions[] = {
 
-  [TD_ESC_CMD]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_cmd_finished, dance_cmd_reset),
+  [TD_ESC_LOCK]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_cmd_finished, dance_cmd_reset),
   [TD_QUOTE] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_quote_finished, dance_quote_reset),
 
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_DEFAULT] = LAYOUT_65_ansi(
-    TD(TD_ESC_CMD),   KC_1,      KC_2,      KC_3,   KC_4,   KC_5,   KC_6,   KC_7,   KC_8,      KC_9,      KC_0,            KC_MINS,        KC_EQL,   KC_BSPC,   KC_HOME, 
-    KC_TAB,           KC_Q,      KC_W,      KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,      KC_O,      KC_P,            LBRC,           RBRC,     KC_BSLS,   KC_END,
-    LT(1, KC_CAPS),   KC_A,      KC_S,      KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,      KC_L,      KC_SCLN,         TD(TD_QUOTE),   KC_ENT,              KC_PGUP,
-    KC_LSPO,          KC_Z,      KC_X,      KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,   KC_DOT,    KC_SLSH,         KC_RSPC,                  KC_UP,     KC_PGDN,
-    KC_LCTL,          KC_LGUI,   KC_LALT,                      KC_SPC,                         KC_RALT,   LT(1, KC_APP),   KC_RCTL,        KC_LEFT,  KC_DOWN,   KC_RGHT
+    TD(TD_ESC_LOCK),   KC_1,      KC_2,      KC_3,   KC_4,   KC_5,   KC_6,   KC_7,   KC_8,      KC_9,      KC_0,            KC_MINS,        KC_EQL,   KC_BSPC,   KC_HOME, 
+    KC_TAB,            KC_Q,      KC_W,      KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,      KC_O,      KC_P,            LBRC,           RBRC,     KC_BSLS,   KC_END,
+    LT(1, KC_CAPS),    KC_A,      KC_S,      KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,      KC_L,      KC_SCLN,         TD(TD_QUOTE),   KC_ENT,              KC_PGUP,
+    KC_LSPO,           KC_Z,      KC_X,      KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,   KC_DOT,    KC_SLSH,         KC_RSPC,                  KC_UP,     KC_PGDN,
+    KC_LCTL,           KC_LGUI,   KC_LALT,                      KC_SPC,                         KC_RALT,   LT(1, KC_APP),   KC_RCTL,        KC_LEFT,  KC_DOWN,   KC_RGHT
     ),
 	
   [_FUNC] = LAYOUT_65_ansi(

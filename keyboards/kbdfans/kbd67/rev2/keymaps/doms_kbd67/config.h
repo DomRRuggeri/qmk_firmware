@@ -18,4 +18,4 @@
 
 // place overrides here
 
-#define TAP_CODE_DELAY 20
+#define TAP_CODE_DELAY 15
