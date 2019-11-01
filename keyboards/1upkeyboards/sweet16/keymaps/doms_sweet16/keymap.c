@@ -62,7 +62,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_ESC,         LCTL(LSFT(KC_ESC)),   ALT_TAB,      LGUI(KC_L), 
     LCTL(KC_C),     LCTL(KC_V),           KC_NO,        LCTL(KC_F), 
     LCTL(KC_GRV),   LCTL(KC_F5),          LCTL(KC_T),   LCTL(KC_W),
-    LCTL(KC_ENT),   KC_ NO,               KC_NO,        TO(0)
+    LCTL(KC_ENT),   KC_NO,               KC_NO,        TO(0)
     ),
 
 	[3] = LAYOUT_ortho_4x4(
