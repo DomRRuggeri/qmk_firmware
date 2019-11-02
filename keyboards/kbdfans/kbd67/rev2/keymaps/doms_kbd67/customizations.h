@@ -32,7 +32,7 @@ uint8_t RGB_Def[4] = {30, 224, 255, 240};
 uint8_t RGB_Func[4] = {18, 8, 255, 240};
 
 // Media Layer Color
-uint8_t RGB_Led[4] = {14, 128, 255, 240};
+uint8_t RGB_Media[4] = {14, 128, 255, 240};
 
 // Caps Lock Active Color
 uint8_t RGB_Caps[4] = {36, 72, 255, 240};
