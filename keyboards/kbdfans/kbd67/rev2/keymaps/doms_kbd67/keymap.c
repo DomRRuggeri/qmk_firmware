@@ -4,7 +4,7 @@
 // Layers
 #define _DEFAULT 0
 #define _FUNC 1
-#define _LEDS 2
+#define _MEDIA 2
 
 // Enum Tap Dances
 enum {
@@ -210,9 +210,9 @@ uint32_t layer_state_set_user(uint32_t state) {
       rgblight_sethsv(RGB_Func[1],RGB_Func[2],RGB_Func[3]);
       break;
 
-    case _LEDS:
-      rgblight_mode(RGB_Led[0]);
-      rgblight_sethsv(RGB_Led[1],RGB_Led[2],RGB_Led[3]);
+    case _MEDIA:
+      rgblight_mode(RGB_Media[0]);
+      rgblight_sethsv(RGB_Media[1],RGB_Media[2],RGB_Media[3]);
       break;
   }
   return state;
@@ -254,7 +254,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRNS,   KC_TRNS,        KC_TRNS,                              KC_TRNS,                                    KC_TRNS,      KC_TRNS,        KC_TRNS,       KC_HOME,              KC_PGDN,   KC_END
     ),
 	
-  [_LEDS] = LAYOUT_65_ansi(
+  [_MEDIA] = LAYOUT_65_ansi(
     TG(2),     RGB_M_P,   RGB_M_B,   RGB_M_R,   RGB_M_SW,   RGB_M_SN,   RGB_M_K,   RGB_M_X,   RGB_M_G,   KC_NO,   KC_MUTE,   KC_VOLD,   KC_VOLU,   KC_NO,   DEBUG,   
     KC_NO,     RGB_TOG,   RGB_MOD,   RGB_RMOD,  KC_NO,      KC_NO,      KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_TRNS, 
     KC_NO,     RGB_HUI,   RGB_SAI,   RGB_VAI,   RGB_SPI,    KC_NO,      KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,     KC_NO,              KC_NO,   
