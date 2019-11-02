@@ -19,10 +19,14 @@ Since the RGB backlight bleeds through the plate a little bit, I've used some co
 - Braces and brackets swapped. Unmodified = {}, Shift = []
 - Tap for Capslock, hold for Layer
 - Phrases
-- Open Programs (WinKey, Send_string, Enter)
+- WinOpen: Open Programs (WinKey, Send_string, Enter)
 - Single button copy paste
 - Super Alt Tab
 - Copy, New tab, Enter Command
+
+## Customizations
+
+I've separated any values that I believe will be different for everyone into the `customizations.h` file. In this file you can specify your phrases, programs for WinOpen, and set default RGB values.
 
 ## Activating Macros and Features
 
