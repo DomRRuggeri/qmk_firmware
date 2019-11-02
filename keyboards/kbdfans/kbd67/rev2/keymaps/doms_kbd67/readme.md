@@ -13,3 +13,4 @@ There's a lot of focus on one-handed actions in this layout, as I often find mys
 > Braces and brackets swapped. Unmodified = {}, Shift = []
 > Tap for Capslock, hold for Layer
 > Phrases
+> Single button copy paste
