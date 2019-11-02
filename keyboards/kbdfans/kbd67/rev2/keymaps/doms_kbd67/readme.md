@@ -19,4 +19,20 @@ Since the RGB backlight bleeds through the plate a little bit, I've used some co
 - Braces and brackets swapped. Unmodified = {}, Shift = []
 - Tap for Capslock, hold for Layer
 - Phrases
+- Open Programs (WinKey, Send_string, Enter)
 - Single button copy paste
+- Super Alt Tab
+- Copy, New tab, Enter Command
+
+## Activating Macros and Features
+
+| Activation             | Type      | Action                                    |
+|------------------------|-----------|-------------------------------------------|
+| Double-Tap `'`         | Tap Dance | Outputs `"`                               |
+| Double-Tap `ESC`       | Tap Dance | Locks Screen                              |
+| Single-Tap Left Shift  | Quantum   | Outputs `(`                               |
+| Single-Tap Right Shift | Quantum   | Outputs `)`                               |
+| MO(1) + d              | Macro     | Sends `Phrase1`, taps Tab                 |
+| MO(1) + Shift + d      | Macro     | Sends `Phrase2`, taps Tab                 |
+| MO(1) + Ctrl + d       | Macro     | Sends `Phrase3`, taps Enter               |
+| MO(1) + n              | Macro     | Taps WinKey, Sends `WinOpen1`, taps Enter |
