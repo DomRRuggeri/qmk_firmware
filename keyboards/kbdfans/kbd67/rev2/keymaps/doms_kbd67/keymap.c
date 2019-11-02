@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include <phrases.h>
 
 // Layers
 #define _DEFAULT 0
@@ -8,12 +9,12 @@
 // Enum Tap Dances
 enum {
   TD_ESC_LOCK = 0,
-  TD_QUOTE,
+  TD_QUOTE
 };
 
 // Enum Macros
 enum custom_keycodes {
-  DRUGGERI = SAFE_RANGE,
+  PHRASES = SAFE_RANGE,
   NOTEPAD,
   CTRL_CTV,
   ALT_TAB,
@@ -30,22 +31,25 @@ uint16_t alt_tab_timer = 0;
 // Macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case DRUGGERI:
+    case PHRASES:
       if (record->event.pressed) {
 	    	uint8_t shifted = get_mods() & (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT));
         uint8_t ctrld = get_mods() & (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL));
 		  if (shifted) {
 			  uint8_t mods = get_mods();
 			  clear_mods();
-			  SEND_STRING("EAS\\druggeri$$"SS_TAP(X_TAB));
+			  send_string(Phrase2);
+        SEND_STRING(SS_TAP(X_TAB));
 			  set_mods(mods);
       } else if (ctrld) {
           uint8_t mods = get_mods();
           clear_mods();
-          SEND_STRING("druggeri1@ellsworth.onmicrosoft.com"SS_TAP(X_ENTER));
+          send_string(Phrase3);
+          SEND_STRING(SS_TAP(X_ENTER));
           set_mods(mods);
       } else {
-		    SEND_STRING("druggeri$$"SS_TAP(X_TAB));
+        send_string(Phrase1);
+		    SEND_STRING(SS_TAP(X_TAB));
       }
       return true;
 	  }
@@ -54,7 +58,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         SEND_STRING(SS_TAP(X_LGUI));
         _delay_ms(300);
-        SEND_STRING("notepad");
+        send_string(Phrase4);
         _delay_ms(300);
         SEND_STRING(SS_TAP(X_ENTER));
         return true;
@@ -229,7 +233,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_FUNC] = LAYOUT_65_ansi(
     KC_GRV,    KC_F1,          KC_F2,     KC_F3,      LALT(KC_F4),   KC_F5,     KC_F6,     KC_F7,     KC_F8,     KC_F9,        KC_F10,         KC_F11,        KC_F12,               KC_DEL,    MC_RESET, 
     ALT_TAB,   LCTL(KC_GRV),   KC_TRNS,   KC_MYCM,    KC_TRNS,       KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,      KC_PSCR,        KC_TRNS,       LCTL(LSFT(KC_ESC)),   KC_TRNS,   TG(2), 
-    KC_TRNS,   COPYPASTE,      KC_TRNS,   DRUGGERI,   KC_TRNS,       KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,   LGUI(KC_L),   KC_TRNS,        LCTL(KC_F5),   KC_TRNS,                         TG(3),  
+    KC_TRNS,   COPYPASTE,      KC_TRNS,   PHRASES,   KC_TRNS,       KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,   LGUI(KC_L),   KC_TRNS,        LCTL(KC_F5),   KC_TRNS,                         TG(3),  
     KC_TRNS,   KC_TRNS,        KC_TRNS,   KC_CALC,    CTRL_CTV,      KC_TRNS,   NOTEPAD,   KC_MUTE,   KC_VOLD,   KC_VOLU,      LCTL(KC_GRV),   KC_TRNS,                             KC_PGUP,   KC_TRNS, 
     KC_TRNS,   KC_TRNS,        KC_TRNS,                              KC_TRNS,                                    KC_TRNS,      KC_TRNS,        KC_TRNS,       KC_HOME,              KC_PGDN,   KC_END
     ),
