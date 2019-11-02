@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include <phrases.h>
 
 bool is_alt_tab_active = false;
 uint16_t alt_tab_timer = 0;
@@ -25,10 +26,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case ONE:
       if (record->event.pressed) {
-        SEND_STRING("One!");
+        send_string(Phrase1);
       } else {
       }
       break;
+
   }
   return true;
 }
@@ -52,17 +54,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
   [1] = LAYOUT_ortho_4x4(
-    TO(5),   TO(6),   KC_TRNS, RESET,
-    TO(4),   KC_TRNS, KC_TRNS, KC_TRNS, 
-    TO(3),   KC_TRNS, KC_TRNS, KC_TRNS, 
-    TO(2),   KC_NLCK, ONE,     KC_TRNS
+    TO(5),   TO(6),     KC_NO,   RESET,
+    TO(4),   KC_NO,     KC_NO,   KC_NO, 
+    TO(3),   KC_NO,     KC_NO,   KC_NO, 
+    TO(2),   KC_NLCK,   ONE,     KC_TRNS
     ),
 
 	[2] = LAYOUT_ortho_4x4(
     KC_ESC,         LCTL(LSFT(KC_ESC)),   ALT_TAB,      LGUI(KC_L), 
     LCTL(KC_C),     LCTL(KC_V),           KC_NO,        LCTL(KC_F), 
     LCTL(KC_GRV),   LCTL(KC_F5),          LCTL(KC_T),   LCTL(KC_W),
-    LCTL(KC_ENT),   KC_NO,               KC_NO,        TO(0)
+    LCTL(KC_ENT),   KC_NO,                KC_NO,        TO(0)
     ),
 
 	[3] = LAYOUT_ortho_4x4(
