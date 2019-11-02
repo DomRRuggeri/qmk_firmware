@@ -1,5 +1,5 @@
 #include QMK_KEYBOARD_H
-#include <phrases.h>
+#include <customizations.h>
 
 // Layers
 #define _DEFAULT 0
@@ -15,7 +15,7 @@ enum {
 // Enum Macros
 enum custom_keycodes {
   PHRASES = SAFE_RANGE,
-  NOTEPAD,
+  WINOPEN,
   CTRL_CTV,
   ALT_TAB,
   LBRC,
@@ -42,11 +42,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         SEND_STRING(SS_TAP(X_TAB));
 			  set_mods(mods);
       } else if (ctrld) {
-          uint8_t mods = get_mods();
-          clear_mods();
-          send_string(Phrase3);
-          SEND_STRING(SS_TAP(X_ENTER));
-          set_mods(mods);
+        uint8_t mods = get_mods();
+        clear_mods();
+        send_string(Phrase3);
+        SEND_STRING(SS_TAP(X_ENTER));
+        set_mods(mods);
       } else {
         send_string(Phrase1);
 		    SEND_STRING(SS_TAP(X_TAB));
@@ -54,13 +54,29 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return true;
 	  }
 
-	case NOTEPAD:
+	case WINOPEN:
       if (record->event.pressed) {
-        SEND_STRING(SS_TAP(X_LGUI));
-        _delay_ms(300);
-        send_string(Phrase4);
-        _delay_ms(300);
-        SEND_STRING(SS_TAP(X_ENTER));
+        uint8_t shifted = get_mods() & (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT));
+        uint8_t ctrld = get_mods() & (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL));
+        if (shifted){
+          SEND_STRING(SS_TAP(X_LGUI));
+          _delay_ms(300);
+          send_string(WinOpen2);
+          _delay_ms(300);
+          SEND_STRING(SS_TAP(X_ENTER));
+        } else if (ctrld) {
+          SEND_STRING(SS_TAP(X_LGUI));
+          _delay_ms(300);
+          send_string(WinOpen3);
+          _delay_ms(300);
+          SEND_STRING(SS_TAP(X_ENTER));
+        } else {
+          SEND_STRING(SS_TAP(X_LGUI));
+          _delay_ms(300);
+          send_string(WinOpen1);
+          _delay_ms(300);
+          SEND_STRING(SS_TAP(X_ENTER));
+        }
         return true;
       }
 
@@ -128,8 +144,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   case MC_RESET:
     if (record->event.pressed) {
-      rgblight_mode(1);
-      rgblight_sethsv(0,255,240);
+      rgblight_mode(RGB_Reset[0]);
+      rgblight_sethsv(RGB_Reset[1],RGB_Reset[2],RGB_Reset[3]);
       reset_keyboard();
     }
 
@@ -185,18 +201,18 @@ void dance_quote_reset (qk_tap_dance_state_t *state, void *user_data) {
 uint32_t layer_state_set_user(uint32_t state) {
   switch (biton32(state)) {
     case _DEFAULT:
-      rgblight_mode(30);
-      rgblight_sethsv(224, 255, 240);
+      rgblight_mode(RGB_Def[0]);
+      rgblight_sethsv(RGB_Def[1],RGB_Def[2],RGB_Def[3]);
       break;
 
     case _FUNC:
-      rgblight_mode(18);
-      rgblight_sethsv(8, 255, 240);
+      rgblight_mode(RGB_Func[0]);
+      rgblight_sethsv(RGB_Func[1],RGB_Func[2],RGB_Func[3]);
       break;
 
     case _LEDS:
-      rgblight_mode(14);
-      rgblight_sethsv(128, 255, 240);
+      rgblight_mode(RGB_Led[0]);
+      rgblight_sethsv(RGB_Led[1],RGB_Led[2],RGB_Led[3]);
       break;
   }
   return state;
@@ -206,8 +222,8 @@ extern rgblight_config_t rgblight_config;
 
 void led_set_user(uint8_t usb_led) {
   if (usb_led & (1<<USB_LED_CAPS_LOCK)) {
-    rgblight_mode(36);
-    rgblight_sethsv(72,255,240);
+    rgblight_mode(RGB_Caps[0]);
+      rgblight_sethsv(RGB_Caps[1],RGB_Caps[2],RGB_Caps[3]);
   } else {
     (layer_state_set_user(layer_state));
   };
@@ -233,8 +249,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_FUNC] = LAYOUT_65_ansi(
     KC_GRV,    KC_F1,          KC_F2,     KC_F3,      LALT(KC_F4),   KC_F5,     KC_F6,     KC_F7,     KC_F8,     KC_F9,        KC_F10,         KC_F11,        KC_F12,               KC_DEL,    MC_RESET, 
     ALT_TAB,   LCTL(KC_GRV),   KC_TRNS,   KC_MYCM,    KC_TRNS,       KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,      KC_PSCR,        KC_TRNS,       LCTL(LSFT(KC_ESC)),   KC_TRNS,   TG(2), 
-    KC_TRNS,   COPYPASTE,      KC_TRNS,   PHRASES,   KC_TRNS,       KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,   LGUI(KC_L),   KC_TRNS,        LCTL(KC_F5),   KC_TRNS,                         TG(3),  
-    KC_TRNS,   KC_TRNS,        KC_TRNS,   KC_CALC,    CTRL_CTV,      KC_TRNS,   NOTEPAD,   KC_MUTE,   KC_VOLD,   KC_VOLU,      LCTL(KC_GRV),   KC_TRNS,                             KC_PGUP,   KC_TRNS, 
+    KC_TRNS,   COPYPASTE,      KC_TRNS,   PHRASES,    KC_TRNS,       KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,   LGUI(KC_L),   KC_TRNS,        LCTL(KC_F5),   KC_TRNS,                         TG(3),  
+    KC_TRNS,   KC_TRNS,        KC_TRNS,   KC_CALC,    CTRL_CTV,      KC_TRNS,   WINOPEN,   KC_MUTE,   KC_VOLD,   KC_VOLU,      LCTL(KC_GRV),   KC_TRNS,                             KC_PGUP,   KC_TRNS, 
     KC_TRNS,   KC_TRNS,        KC_TRNS,                              KC_TRNS,                                    KC_TRNS,      KC_TRNS,        KC_TRNS,       KC_HOME,              KC_PGDN,   KC_END
     ),
 	
@@ -245,7 +261,5 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_NO,     RGB_HUD,   RGB_SAD,   RGB_VAD,   RGB_SPD,    KC_NO,      KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,                KC_NO,   KC_NO,   
     KC_NO,     KC_NO,     KC_NO,     KC_NO,                             KC_NO,                                    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO
     ),
-	
-  // [3] = LAYOUT_65_ansi(
-  //  KC_ESC, TO(0), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_MS_U, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_MS_L, KC_MS_D, KC_MS_R, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_BTN3, KC_TRNS, KC_ACL2, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_WH_U, KC_NO, KC_ACL0, KC_NO, KC_NO, KC_BTN1, KC_NO, KC_NO, KC_NO, KC_BTN1, KC_WH_D, KC_BTN2)
+
 };
