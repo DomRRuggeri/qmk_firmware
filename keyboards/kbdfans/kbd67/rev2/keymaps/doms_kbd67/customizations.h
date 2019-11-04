@@ -16,7 +16,7 @@ char Phrase3[] = "druggeri1@ellsworth.onmicrosoft.com";
 char WinOpen1[] = "notepad";
 
 // MO(1) + Shift + n [Taps Winkey, Sends String, taps Enter]
-char WinOpen2[] = "";
+char WinOpen2[] = "TeamViewer";
 
 // MO(1) + Ctrl + n [Taps Winkey, Sends String, taps Enter]
 char WinOpen3[] = "";
