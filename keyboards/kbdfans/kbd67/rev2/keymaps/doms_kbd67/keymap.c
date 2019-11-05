@@ -65,12 +65,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         uint8_t shifted = get_mods() & (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT));
         uint8_t ctrld = get_mods() & (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL));
         if (shifted){
+          clear_mods();
           SEND_STRING(SS_TAP(X_LGUI));
           _delay_ms(300);
           send_string(WinOpen2);
           _delay_ms(300);
           SEND_STRING(SS_TAP(X_ENTER));
         } else if (ctrld) {
+          clear_mods();
           SEND_STRING(SS_TAP(X_LGUI));
           _delay_ms(300);
           send_string(WinOpen3);
