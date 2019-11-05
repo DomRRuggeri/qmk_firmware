@@ -21,7 +21,6 @@ Since the RGB backlight bleeds through the plate a little bit, I've used some co
 - Phrases
 - WinOpen: Open Programs (WinKey, Send_string, Enter)
 - Single button copy paste
-- Super Alt Tab
 - Copy, New tab, Enter Command
 
 ## Customizations
