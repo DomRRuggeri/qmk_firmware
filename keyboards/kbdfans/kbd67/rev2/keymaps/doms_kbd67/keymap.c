@@ -1,34 +1,41 @@
 #include QMK_KEYBOARD_H
 #include <customizations.h>
 
+
 // Layers
 #define _DEFAULT 0
 #define _FUNC 1
 #define _MEDIA 2
 
 // Enum Tap Dances
-enum {
+enum tap_dances {
   TD_ESC_LOCK = 0,
   TD_QUOTE
 };
 
+
 // Enum Macros
-enum custom_keycodes {
+enum my_keycodes {
   PHRASES = SAFE_RANGE,
   WINOPEN,
   CTRL_CTV,
-  ALT_TAB,
   LBRC,
   RBRC,
-  COPYPASTE
+  COPYPASTE,
+  
+  // Must be last:
+  DYNAMIC_MACRO_RANGE,
 };
 
-// Set Alt-Tab Timer and State
-bool is_alt_tab_active = false;
-uint16_t alt_tab_timer = 0;
+#include <dynamic_macro.h>
+
 
 // Macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (!process_record_dynamic_macro(keycode, record)) {
+        return false;
+  }
+
   switch (keycode) {
     case PHRASES:
       if (record->event.pressed) {
@@ -118,20 +125,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
-	case ALT_TAB:
-      if (record->event.pressed) {
-        if (!is_alt_tab_active) {
-          is_alt_tab_active = true;
-          register_code(KC_LALT);
-        } 
-        alt_tab_timer = timer_read();
-        register_code(KC_TAB);
-      } else {
-        register_code(KC_LALT);
-        unregister_code(KC_TAB);
-      }
-      break;
-
   case COPYPASTE:
       if (record->event.pressed) {
         SEND_STRING(SS_LCTRL("c"));
@@ -144,20 +137,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 };
 
-void shutdown_user()
-  {
+void shutdown_user() {
     rgblight_mode(RGB_Reset[0]);
     rgblight_sethsv(RGB_Reset[1],RGB_Reset[2],RGB_Reset[3]);
   }
-
-void matrix_scan_user(void) {
-  if (is_alt_tab_active) {
-    if (timer_elapsed(alt_tab_timer) > 3000) {
-      unregister_code(KC_LALT);
-      is_alt_tab_active = false;
-    }
-  }
-}
 
 void dance_cmd_finished (qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
@@ -244,17 +227,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 	
   [_FUNC] = LAYOUT_65_ansi(
-    KC_GRV,    KC_F1,          KC_F2,     KC_F3,      LALT(KC_F4),   KC_F5,     KC_F6,     KC_F7,     KC_F8,     KC_F9,        KC_F10,         KC_F11,        KC_F12,               KC_DEL,    RESET, 
-    ALT_TAB,   LCTL(KC_GRV),   KC_TRNS,   KC_MYCM,    KC_TRNS,       KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,      KC_PSCR,        KC_TRNS,       LCTL(LSFT(KC_ESC)),   KC_TRNS,   TG(2), 
-    KC_TRNS,   COPYPASTE,      KC_TRNS,   PHRASES,    KC_TRNS,       KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,   LGUI(KC_L),   KC_TRNS,        LCTL(KC_F5),   KC_TRNS,                         TG(3),  
-    KC_TRNS,   KC_TRNS,        KC_TRNS,   KC_CALC,    CTRL_CTV,      KC_TRNS,   WINOPEN,   KC_MUTE,   KC_VOLD,   KC_VOLU,      LCTL(KC_GRV),   KC_TRNS,                             KC_PGUP,   KC_TRNS, 
-    KC_TRNS,   KC_TRNS,        KC_TRNS,                              KC_TRNS,                                    KC_TRNS,      KC_TRNS,        KC_TRNS,       KC_HOME,              KC_PGDN,   KC_END
+    KC_GRV,    KC_F1,          KC_F2,     KC_F3,      LALT(KC_F4),      KC_F5,          KC_F6,           KC_F7,     KC_F8,     KC_F9,        KC_F10,         KC_F11,        KC_F12,               KC_DEL,    RESET, 
+    KC_TAB,    LCTL(KC_GRV),   KC_TRNS,   KC_MYCM,    DYN_REC_START1,   DYN_REC_STOP,   DYN_MACRO_PLAY1,   KC_TRNS,   KC_TRNS,   KC_TRNS,      KC_PSCR,        KC_TRNS,       LCTL(LSFT(KC_ESC)),   KC_TRNS,   TG(2), 
+    KC_TRNS,   COPYPASTE,      KC_TRNS,   PHRASES,    KC_TRNS,          KC_TRNS,        KC_TRNS,         KC_TRNS,   KC_TRNS,   LGUI(KC_L),   KC_TRNS,        LCTL(KC_F5),   KC_TRNS,                         TG(3),  
+    KC_TRNS,   KC_TRNS,        KC_TRNS,   KC_CALC,    CTRL_CTV,         KC_TRNS,        WINOPEN,         KC_MUTE,   KC_VOLD,   KC_VOLU,      LCTL(KC_GRV),   KC_TRNS,                             KC_PGUP,   KC_TRNS, 
+    KC_TRNS,   KC_TRNS,        KC_TRNS,                                 KC_TRNS,                                               KC_TRNS,      KC_TRNS,        KC_TRNS,       KC_HOME,              KC_PGDN,   KC_END
     ),
 	
   [_MEDIA] = LAYOUT_65_ansi(
     TG(2),     RGB_M_P,   RGB_M_B,   RGB_M_R,   RGB_M_SW,   RGB_M_SN,   RGB_M_K,   RGB_M_X,   RGB_M_G,   KC_NO,   KC_MUTE,   KC_VOLD,   KC_VOLU,   KC_NO,   DEBUG,   
     KC_NO,     RGB_TOG,   RGB_MOD,   RGB_RMOD,  KC_NO,      KC_NO,      KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_TRNS, 
-    KC_NO,     RGB_HUI,   RGB_SAI,   RGB_VAI,   RGB_SPI,    KC_NO,      KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,     KC_NO,              KC_NO,   
+    KC_NO,     RGB_HUI,   RGB_SAI,   RGB_VAI,   RGB_SPI,    KC_NO,      KC_NO,     KC_NO,     KC_MPRV,   KC_NO,   KC_MNXT,   KC_MPLY,   KC_NO,              KC_NO,   
     KC_NO,     RGB_HUD,   RGB_SAD,   RGB_VAD,   RGB_SPD,    KC_NO,      KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,                KC_NO,   KC_NO,   
     KC_NO,     KC_NO,     KC_NO,     KC_NO,                             KC_NO,                                    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO
     ),
