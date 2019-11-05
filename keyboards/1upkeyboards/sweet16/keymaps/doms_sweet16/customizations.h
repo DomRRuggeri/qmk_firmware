@@ -11,7 +11,7 @@ uint8_t RGB_0[4] = {30, 224, 255, 40};
 uint8_t RGB_1[4] = {18, 128,255,40};
 
 // Media Layer Color
-uint8_t RGB_2[4] = {14, 128, 255, 40};
+uint8_t RGB_2[4] = {30, 85, 255, 40};
 
 // Layer 3 color
 uint8_t RGB_3[4] = {18, 85,255,40};
