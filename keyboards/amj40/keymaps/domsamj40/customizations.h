@@ -16,7 +16,26 @@ char Phrase3[] = "druggeri1@ellsworth.onmicrosoft.com";
 char WinOpen1[] = "notepad";
 
 // MO(1) + Shift + n [Taps Winkey, Sends String, taps Enter]
-char WinOpen2[] = "TeamViewer";
+char WinOpen2[] = "Powershell";
 
 // MO(1) + Ctrl + n [Taps Winkey, Sends String, taps Enter]
 char WinOpen3[] = "";
+
+
+// RGB Colors
+// Syntax: {mode, hue, sat, value}
+
+// Default Layer Color
+uint8_t RGB_0[4] = {30, 224, 255, 200};
+
+uint8_t RGB_1[4] = {23, 192, 255, 200};
+
+uint8_t RGB_2[4] = {23, 128, 255, 200};
+
+uint8_t RGB_3[4] = {14, 128, 255, 200};
+
+// Caps Lock Active Color
+uint8_t RGB_Caps[4] = {36, 72, 255, 200};
+
+// Reset Color
+uint8_t RGB_Reset[4] = {1, 0, 255, 200};
