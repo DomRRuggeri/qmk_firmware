@@ -17,7 +17,7 @@ enum my_keycodes {
   PHRASES = SAFE_RANGE,
   WINOPEN,
   CTRL_CTV,
-  COPYPASTE
+  COPYPASTEr
 };
 
 // Macros
