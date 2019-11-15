@@ -1,4 +1,4 @@
-#include "kb.h"
+#include "pocbox.h"
 
 bool is_alt_tab_active = false;
 uint16_t alt_tab_timer = 0;
@@ -22,7 +22,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		  SEND_STRING("restart-computer -force");
 		  SEND_STRING(SS_TAP(X_ENTER));
 	  }
-	  break;
 	  
 	case ALT_TAB:
       if (record->event.pressed) {
@@ -42,67 +41,67 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-	[0] = KEYMAP(
+	[0] = LAYOUT(
 		KC_ENTER,    LGUI(KC_L),
 		LT(1, KC_4), ALT_TAB),
 
-	[1] = KEYMAP(
+	[1] = LAYOUT(
 		RESET, REBOOT, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS),
 
-	KEYMAP(
+	LAYOUT(
 		KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS)
 
