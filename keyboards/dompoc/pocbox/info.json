@@ -1,0 +1,19 @@
+{
+    "keyboard_name": "PocBox",
+    "url": "",
+    "maintainer": "qmk",
+    "width": 2,
+    "height": 2,
+    "layouts": {
+        "LAYOUT": {
+            "key_count": 4,
+            "layout": [
+                {"label":"K00 (F6,D4)", "x":0, "y":0},
+                {"label":"K01 (F6,D7)", "x":1, "y":0},
+                {"label":"K10 (B1,D4)", "x":0, "y":1},
+                {"label":"K11 (B1,D7)", "x":1, "y":1}
+            ]
+        }
+    }
+    ,"meta": "https://noroadsleft.github.io/kbf_qmk_converter/"
+}
