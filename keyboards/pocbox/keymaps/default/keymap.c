@@ -8,6 +8,33 @@ enum custom_keycodes {
   ALT_TAB
 };
 
+#ifdef OLED_DRIVER_ENABLE
+void oled_task_user(void) {
+  // Host Keyboard Layer Status
+  oled_write_P(PSTR("Layer: "), false);
+  switch (get_highest_layer(layer_state)) {
+    case 0:
+      oled_write_P(PSTR("Default\n"), false);
+      break;
+    case 1:
+      oled_write_P(PSTR("FN\n"), false);
+      break;
+    case 2:
+      oled_write_P(PSTR("ADJ\n"), false);
+      break;
+    default:
+      // Or use the write_ln shortcut over adding '\n' to the end of your string
+      oled_write_ln_P(PSTR("Undefined"), false);
+  }
+
+  // Host Keyboard LED Status
+  uint8_t led_usb_state = host_keyboard_leds();
+  oled_write_P(led_usb_state & (1<<USB_LED_NUM_LOCK) ? PSTR("NUMLCK ") : PSTR("       "), false);
+  oled_write_P(led_usb_state & (1<<USB_LED_CAPS_LOCK) ? PSTR("CAPLCK ") : PSTR("       "), false);
+  oled_write_P(led_usb_state & (1<<USB_LED_SCROLL_LOCK) ? PSTR("SCRLCK ") : PSTR("       "), false);
+}
+#endif
+
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -42,7 +69,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	[0] = LAYOUT(
-		KC_ENTER,    LGUI(KC_L),
+		RGB_MOD,    LGUI(KC_L),
 		LT(1, KC_4), ALT_TAB),
 
 	[1] = LAYOUT(
