@@ -44,3 +44,8 @@ I've separated any values that I believe will be different for everyone into the
 | `MO(1)` + `v`           | Macro     | Holds `Ctrl`, and types `ctv` then taps `Enter`. Used in Browser to copy text, open tab, paste, and Search. |
 | `MO(1)` + `Tab`         | Macro     | Super Alt Tab.                                                                                              |
 | `MO(1)` + `a`           | Macro     | Single-key copy paste. Press to copy, release to paste.                                                     |
+
+## To-do List
+- Create visual layout/legends
+- Upload image
+- Add more explanation on customizations.h file
