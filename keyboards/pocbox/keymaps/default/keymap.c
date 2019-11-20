@@ -32,9 +32,9 @@ void oled_task_user(void) {
   oled_write_P(led_usb_state & (1<<USB_LED_NUM_LOCK) ? PSTR("NUMLCK ") : PSTR("       "), false);
   oled_write_P(led_usb_state & (1<<USB_LED_CAPS_LOCK) ? PSTR("CAPLCK ") : PSTR("       "), false);
   oled_write_P(led_usb_state & (1<<USB_LED_SCROLL_LOCK) ? PSTR("SCRLCK ") : PSTR("       "), false);
+  oled_write_P(PSTR(" ---- PocBox ----\n Proof of Concept\n"), false);
 }
 #endif
-
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
