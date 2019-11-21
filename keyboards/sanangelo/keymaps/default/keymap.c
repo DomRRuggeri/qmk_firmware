@@ -19,20 +19,11 @@ enum my_keycodes {
   CTRL_CTV,
   LBRC,
   RBRC,
-  COPYPASTE,
-  
-  // Must be last:
-  DYNAMIC_MACRO_RANGE,
+  COPYPASTE
 };
-
-#include <dynamic_macro.h>
-
 
 // Macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (!process_record_dynamic_macro(keycode, record)) {
-        return false;
-  }
 
   switch (keycode) {
     case PHRASES:
@@ -65,22 +56,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (shifted){
           clear_mods();
           SEND_STRING(SS_TAP(X_LGUI));
-          _delay_ms(300);
+          wait_ms(300);
           send_string(WinOpen2);
-          _delay_ms(300);
+          wait_ms(300);
           SEND_STRING(SS_TAP(X_ENTER));
         } else if (ctrld) {
           clear_mods();
           SEND_STRING(SS_TAP(X_LGUI));
-          _delay_ms(300);
+          wait_ms(300);
           send_string(WinOpen3);
-          _delay_ms(300);
+          wait_ms(300);
           SEND_STRING(SS_TAP(X_ENTER));
         } else {
           SEND_STRING(SS_TAP(X_LGUI));
-          _delay_ms(300);
+          wait_ms(300);
           send_string(WinOpen1);
-          _delay_ms(300);
+          wait_ms(300);
           SEND_STRING(SS_TAP(X_ENTER));
         }
         return true;
