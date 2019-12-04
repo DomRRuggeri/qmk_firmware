@@ -20,8 +20,11 @@ enum my_keycodes {
   CTRL_CTV,
   LBRC,
   RBRC,
-  COPYPASTE
+  COPYPASTE,
+  PSONG
 };
+
+float PLAY[][2] = SONG(ZELDA_TREASURE);
 
 // Macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -77,6 +80,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         return true;
       }
+
+  case PSONG:
+    if (record->event.pressed) {
+      PLAY_SONG(PLAY);
+    }
+    return true;
 
 	case LBRC:
       if (record->event.pressed) {
@@ -240,8 +249,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_MUSIC] = LAYOUT(
     KC_NO,     MU_TOG,  MU_MOD,  KC_NO,  KC_NO,    KC_NO,    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,   KC_NO,   
     KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO, 
-    KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,     KC_NO,              KC_NO,   
-    KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,                         KC_NO,   KC_NO,   
+    KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,     KC_NO,              TG(3),   
+    KC_NO,     PSONG,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,                         KC_NO,   KC_NO,   
     KC_NO,     KC_NO,   KC_NO,                                               KC_NO,                     KC_NO,    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO
     ),
 };

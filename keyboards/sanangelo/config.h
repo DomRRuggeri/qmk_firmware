@@ -34,21 +34,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Keyboard Matrix Assignments
  */
-#define MATRIX_ROW_PINS { B0, B0, B0, B3, B4 }
-#define MATRIX_COL_PINS { B5, B6, B7, C0, C1, C2, C3, C4, C5, C6, C7, D0, D1, D2, D3, D4 }
+#define MATRIX_ROW_PINS { A2, A1, A0, B8, B13 }
+#define MATRIX_COL_PINS { A6, A8, A15, B0, B1, B2, B3, B4, A13, A14, B12, B11, B10, B9, B15, B14 }
 
 #define DIODE_DIRECTION COL2ROW
 
 /*
+#define RGB_DI_PIN C13
 #define RGBLIGHT_ANIMATIONS
-#define RGBLED_NUM 13
+#define RGBLED_NUM 0
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8
 */
-#define RGB_DI_PIN D1
-#define RGBLIGHT_ANIMATIONS
-#define RGBLED_NUM 32
-#define RGBLIGHT_HUE_STEP 8
-#define RGBLIGHT_SAT_STEP 8
-#define RGBLIGHT_VAL_STEP 8
