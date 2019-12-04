@@ -44,6 +44,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROW_PINS { F6, B1 }
 #define MATRIX_COL_PINS { D4, D7 }
 
+#define ENCODERS_PAD_A { A8 }
+#define ENCODERS_PAD_B { A9 }
+#define ENCODER_RESOLUTION 4
+
 #define DIODE_DIRECTION COL2ROW
 
 /* Underglow options */
