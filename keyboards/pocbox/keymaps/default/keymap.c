@@ -5,8 +5,18 @@ uint16_t alt_tab_timer = 0;
 
 enum custom_keycodes {
   REBOOT = SAFE_RANGE,
-  ALT_TAB
+  ALT_TAB,
+  CYCLEDIAL
 };
+
+enum dial_modes {
+  SCROLL,
+  CYCLEWIN,
+  CYCLETAB,
+  VOL
+}
+
+DIAL_MODE = SCROLL;
 
 #ifdef OLED_DRIVER_ENABLE
 void oled_task_user(void) {
@@ -27,27 +37,101 @@ void oled_task_user(void) {
       oled_write_ln_P(PSTR("Undefined"), false);
   }
 
+  oled_write_P(PSTR("Dial: "), false);
+    switch (DIAL_MODE) {
+      case SCROLL:
+        oled_write_P(PSTR("Scroll\n"), false);
+        break;
+          
+      case CYCLEWIN:
+        oled_write_P(PSTR("Window\n"), false);
+        break;
+        
+      case CYCLETAB:
+        oled_write_P(PSTR("Tab\n"), false);
+        break;
+
+      case VOL:
+        oled_write_P(PSTR("Volume\n"), false);
+        break;
+    }
+
   // Host Keyboard LED Status
   uint8_t led_usb_state = host_keyboard_leds();
   oled_write_P(led_usb_state & (1<<USB_LED_NUM_LOCK) ? PSTR("NUMLCK ") : PSTR("       "), false);
   oled_write_P(led_usb_state & (1<<USB_LED_CAPS_LOCK) ? PSTR("CAPLCK ") : PSTR("       "), false);
   oled_write_P(led_usb_state & (1<<USB_LED_SCROLL_LOCK) ? PSTR("SCRLCK ") : PSTR("       "), false);
-  oled_write_P(PSTR(" ---- PocBox ----\n Proof of Concept\n"), false);
+  //oled_write_P(PSTR(" ---- PocBox ----\n Proof of Concept\n"), false);
 }
 #endif
 
 void encoder_update_user(uint8_t index, bool clockwise) {
-  if (index == 0) { /* First encoder */
-    if (clockwise) {
-      tap_code(KC_PGDN);
-    } else {
-      tap_code(KC_PGUP);
+  if (index == 0) {
+    switch (DIAL_MODE) {
+      case SCROLL:
+        if (clockwise) {
+          tap_code(KC_PGDN);
+        } else {
+          tap_code(KC_PGUP);
+        }
+        break;
+          
+      case CYCLEWIN:
+        if (clockwise) {
+          tap_code(KC_PGDN);
+        } else {
+          tap_code(KC_PGUP);
+        }
+        break;
+        
+      case CYCLETAB:
+        if (clockwise) {
+          register_code(KC_LCTL);
+          tap_code(KC_PGDN);
+          unregister_code(KC_LCTL);
+        } else {
+          register_code(KC_LCTL);
+          tap_code(KC_PGUP);
+          unregister_code(KC_LCTL);
+        }
+        break;
+
+      case VOL:
+        if (clockwise) {
+          tap_code(KC_VOLU);
+        } else {
+          tap_code(KC_VOLD);
+        }
+        break;
     }
   }
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+
+    case CYCLEDIAL:
+      if (record->event.pressed) {
+        switch (DIAL_MODE) {
+          case SCROLL:
+            DIAL_MODE = CYCLEWIN;
+            break;
+          
+          case CYCLEWIN:
+            DIAL_MODE = CYCLETAB;
+            break;
+        
+          case CYCLETAB:
+            DIAL_MODE = VOL;
+            break;
+
+          default:
+            DIAL_MODE = SCROLL;
+            break;
+        }
+      }
+      break;
+
     case REBOOT:
       if (record->event.pressed) {
 		  SEND_STRING(SS_TAP(X_LGUI));
@@ -59,8 +143,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		  SEND_STRING("restart-computer -force");
 		  SEND_STRING(SS_TAP(X_ENTER));
 	  }
+    break;
 	  
-	case ALT_TAB:
+	  case ALT_TAB:
       if (record->event.pressed) {
         if (!is_alt_tab_active) {
           is_alt_tab_active = true;
@@ -79,7 +164,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	[0] = LAYOUT(
-		RGB_MOD,    LGUI(KC_L),
+		RGB_MOD,    CYCLEDIAL,
 		LT(1, KC_4), ALT_TAB),
 
 	[1] = LAYOUT(
