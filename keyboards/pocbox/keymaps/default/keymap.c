@@ -78,9 +78,17 @@ void encoder_update_user(uint8_t index, bool clockwise) {
           
       case CYCLEWIN:
         if (clockwise) {
-          tap_code(KC_PGDN);
+          register_code(KC_LALT);
+          tap_code(KC_TAB);
+          _delay_ms(1000);
+          unregister_code(KC_LALT);
         } else {
-          tap_code(KC_PGUP);
+          register_code(KC_LALT);
+          register_code(KC_LSFT);
+          tap_code(KC_TAB);
+          _delay_ms(1000);
+          unregister_code(KC_LALT);
+          unregister_code(KC_LSFT);
         }
         break;
         
@@ -99,7 +107,11 @@ void encoder_update_user(uint8_t index, bool clockwise) {
       case VOL:
         if (clockwise) {
           tap_code(KC_VOLU);
+          tap_code(KC_VOLU);
+          tap_code(KC_VOLU);
         } else {
+          tap_code(KC_VOLD);
+          tap_code(KC_VOLD);
           tap_code(KC_VOLD);
         }
         break;
