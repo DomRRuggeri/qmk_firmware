@@ -188,6 +188,7 @@
 # }
 # 
 # alias cd=cd_func
+
 alias makekbd67="make kbdfans/kbd67/rev2:doms_kbd67"
 alias flashkbd67="make kbdfans/kbd67/rev2:doms_kbd67:dfu"
 
@@ -196,6 +197,9 @@ alias flashsweet16="make 1upkeyboards/sweet16:doms_sweet16:flash"
 
 alias makeamj40="make amj40:domsamj40"
 alias flashamj40="make amj40:domsamj40:flash"
+
+alias makepocbox="make pocbox:default"
+alias flashpocbox="make pocbox:default:avrdude"
 
 alias makesanangelo="make sanangelo:default"
 alias flashsanangelo="make sanangelo:default:dfu-util"
