@@ -204,4 +204,7 @@ alias flashpocbox="make pocbox:default:avrdude"
 alias makesanangelo="make sanangelo:default"
 alias flashsanangelo="make sanangelo:default:dfu-util"
 
+alias makedomo86="make domo86:default"
+alias flashdomo86="make domo86:default:dfu-util"
+
 source ~/qmk_utils/activate_msys2.sh
