@@ -2,6 +2,7 @@
 
 bool is_alt_tab_active = false;
 uint16_t alt_tab_timer = 0;
+#define ALTTAB_HOLD_TIME 1000
 
 enum custom_keycodes {
   REBOOT = SAFE_RANGE,
@@ -14,7 +15,7 @@ enum dial_modes {
   CYCLEWIN,
   CYCLETAB,
   VOL
-}
+};
 
 DIAL_MODE = SCROLL;
 
@@ -77,19 +78,22 @@ void encoder_update_user(uint8_t index, bool clockwise) {
         break;
           
       case CYCLEWIN:
-        if (clockwise) {
-          register_code(KC_LALT);
-          tap_code(KC_TAB);
-          _delay_ms(1000);
-          unregister_code(KC_LALT);
-        } else {
-          register_code(KC_LALT);
-          register_code(KC_LSFT);
-          tap_code(KC_TAB);
-          _delay_ms(1000);
-          unregister_code(KC_LALT);
-          unregister_code(KC_LSFT);
+
+        alt_tab_timer = timer_read();
+
+        if (!is_alt_tab_active) {
+          is_alt_tab_active = true;
+          SEND_STRING(SS_DOWN(X_LALT) SS_TAP(X_TAB));
+          wait_ms(50);
+          SEND_STRING(SS_TAP(X_LEFT));
         }
+
+        if (clockwise) {
+          SEND_STRING(SS_TAP(X_TAB));
+        } else {
+          SEND_STRING(SS_TAP(X_LEFT));
+        }
+
         break;
         
       case CYCLETAB:
@@ -194,12 +198,14 @@ void matrix_init_user(void) {
 }
 
 void matrix_scan_user(void) {
-	if (is_alt_tab_active) {
-    if (timer_elapsed(alt_tab_timer) > 1000) {
-      unregister_code(KC_LALT);
-      is_alt_tab_active = false;
+#ifdef ENCODER_ENABLE
+    if (is_alt_tab_active) {
+        if (timer_elapsed(alt_tab_timer) > ALTTAB_HOLD_TIME) {
+            SEND_STRING(SS_UP(X_LALT));
+            is_alt_tab_active = false;
+        }
     }
-  }
+#endif
 }
 
 void led_set_user(uint8_t usb_led) {
