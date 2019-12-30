@@ -39,6 +39,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define DIODE_DIRECTION COL2ROW
 
+#define ENCODERS_PAD_A { A9 }
+#define ENCODERS_PAD_B { A10 }
+
+#define ENCODER_RESOLUTION 4
 /*
 #define RGB_DI_PIN C13
 #define RGBLIGHT_ANIMATIONS
