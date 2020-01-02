@@ -207,4 +207,7 @@ alias flashsanangelo="make sanangelo:default:dfu-util"
 alias makedomo86="make domo86:default"
 alias flashdomo86="make domo86:default:dfu-util"
 
+alias maketwain="make twainenterpriser:default"
+alias flashtwain="make twainenterpriser:default:flash"
+
 source ~/qmk_utils/activate_msys2.sh
