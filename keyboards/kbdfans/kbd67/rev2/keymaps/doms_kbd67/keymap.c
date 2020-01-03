@@ -10,7 +10,9 @@
 // Enum Tap Dances
 enum tap_dances {
   TD_ESC_LOCK = 0,
-  TD_QUOTE
+  TD_QUOTE,
+  TD_HOME_ALTTB,
+  TD_END_F4
 };
 
 
@@ -153,7 +155,7 @@ void dance_cmd_reset (qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     unregister_code (KC_ESC);
   } else {
-	unregister_code (KC_LGUI);
+	  unregister_code (KC_LGUI);
     unregister_code (KC_L);
   }
 }
@@ -162,7 +164,7 @@ void dance_quote_finished (qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     register_code (KC_QUOT);
   } else {
-	register_code (KC_RSFT);
+	  register_code (KC_RSFT);
     register_code (KC_QUOT);
   }
 }
@@ -171,8 +173,45 @@ void dance_quote_reset (qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     unregister_code (KC_QUOT);
   } else {
-	unregister_code (KC_RSFT);
+	  unregister_code (KC_RSFT);
     unregister_code (KC_QUOT);
+  }
+}
+
+void dance_home_finished (qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    register_code (KC_HOME);
+  } else {
+	  register_code (KC_LSHIFT);
+    register_code (KC_HOME);
+  }
+}
+
+void dance_home_reset (qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    unregister_code (KC_HOME);
+  } else {
+	  unregister_code (KC_LSHIFT);
+    unregister_code (KC_HOME);
+  }
+}
+
+void dance_end_finished (qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    register_code (KC_END);
+  } else {
+	  register_code (KC_LALT);
+    register_code (KC_F4);
+    
+  }
+}
+
+void dance_end_reset (qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    unregister_code (KC_END);
+  } else {
+    unregister_code (KC_LALT);
+    unregister_code (KC_F4);
   }
 }
 
@@ -212,6 +251,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
   [TD_ESC_LOCK]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_cmd_finished, dance_cmd_reset),
   [TD_QUOTE] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_quote_finished, dance_quote_reset),
+  [TD_HOME_ALTTB]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_home_finished, dance_home_reset),
+  [TD_END_F4]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_end_finished, dance_end_reset),
 
 };
 
@@ -222,8 +263,8 @@ const uint32_t PROGMEM unicode_map[] = {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_DEFAULT] = LAYOUT_65_ansi(
-    TD(TD_ESC_LOCK),   KC_1,      KC_2,      KC_3,   KC_4,   KC_5,   KC_6,   KC_7,   KC_8,      KC_9,      KC_0,            KC_MINS,        KC_EQL,   KC_BSPC,   KC_HOME, 
-    KC_TAB,            KC_Q,      KC_W,      KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,      KC_O,      KC_P,            LBRC,           RBRC,     KC_BSLS,   KC_END,
+    TD(TD_ESC_LOCK),   KC_1,      KC_2,      KC_3,   KC_4,   KC_5,   KC_6,   KC_7,   KC_8,      KC_9,      KC_0,            KC_MINS,        KC_EQL,   KC_BSPC,   TD(TD_HOME_ALTTB), 
+    KC_TAB,            KC_Q,      KC_W,      KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,      KC_O,      KC_P,            LBRC,           RBRC,     KC_BSLS,   TD(TD_END_F4),
     LT(1, KC_CAPS),    KC_A,      KC_S,      KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,      KC_L,      KC_SCLN,         TD(TD_QUOTE),   KC_ENT,              KC_PGUP,
     KC_LSPO,           KC_Z,      KC_X,      KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,   KC_DOT,    KC_SLSH,         KC_RSPC,                  KC_UP,     KC_PGDN,
     KC_LCTL,           KC_LGUI,   KC_LALT,                      KC_SPC,                         KC_RALT,   LT(1, KC_APP),   KC_RCTL,        KC_LEFT,  KC_DOWN,   KC_RGHT
