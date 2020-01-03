@@ -25,14 +25,14 @@
 #define DESCRIPTION     60% Bluetooth Keyboard
 
 /* key matrix size */
-#define MATRIX_ROWS 1
-#define MATRIX_COLS 1
+#define MATRIX_ROWS 5
+#define MATRIX_COLS 12
 
 #define DIODE_DIRECTION COL2ROW
 
-/* Pancake default pinout */
-#define MATRIX_ROW_PINS { F7 }
-#define MATRIX_COL_PINS { F4 }
+/* default pinout */
+#define MATRIX_ROW_PINS { B5, D7, C6, D0, D1 }
+#define MATRIX_COL_PINS { C7, D6, B7, B6, F0, D2, D3, F1, F4, F5, F6, F7 }
 #define UNUSED_PINS
 
 #define AdafruitBleResetPin D4
