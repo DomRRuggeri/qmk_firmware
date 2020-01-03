@@ -6,7 +6,7 @@ enum layers {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_DEFAULT] = LAYOUT(
-    KC_ESC
+    KC_W
 )
 
 };

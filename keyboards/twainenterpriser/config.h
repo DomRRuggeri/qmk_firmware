@@ -32,7 +32,7 @@
 
 /* Pancake default pinout */
 #define MATRIX_ROW_PINS { F7 }
-#define MATRIX_COL_PINS { F6 }
+#define MATRIX_COL_PINS { F4 }
 #define UNUSED_PINS
 
 #define AdafruitBleResetPin D4
