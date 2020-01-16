@@ -25,8 +25,8 @@
 #define DESCRIPTION     60% Bluetooth Keyboard
 
 /* key matrix size */
-#define MATRIX_ROWS 5
-#define MATRIX_COLS 12
+#define MATRIX_ROWS 10
+#define MATRIX_COLS 7
 
 #define DIODE_DIRECTION COL2ROW
 
