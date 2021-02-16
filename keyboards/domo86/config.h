@@ -43,6 +43,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ENCODERS_PAD_B { A10 }
 
 #define ENCODER_RESOLUTION 4
+
+#define TAP_CODE_DELAY 5
 /*
 #define RGB_DI_PIN C13
 #define RGBLIGHT_ANIMATIONS
