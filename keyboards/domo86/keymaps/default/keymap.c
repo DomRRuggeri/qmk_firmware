@@ -29,7 +29,10 @@ enum dial_modes {
   CYCLEWIN,
   CYCLETAB,
   VOL
-}
+};
+
+bool is_alt_tab_active = false;
+uint16_t alt_tab_timer = 0;
 
 DIAL_MODE = SCROLL;
 
@@ -93,19 +96,19 @@ void encoder_update_user(uint8_t index, bool clockwise) {
         break;
           
       case CYCLEWIN:
+        
         if (clockwise) {
-          register_code(KC_LALT);
-          tap_code(KC_TAB);
-          wait_ms(1000);
-          unregister_code(KC_LALT);
+          if (!is_alt_tab_active) {
+            is_alt_tab_active = true;
+            register_code(KC_LALT);
+          }
+          alt_tab_timer = timer_read();
+          tap_code16(KC_TAB);
         } else {
-          register_code(KC_LALT);
-          register_code(KC_LSFT);
-          tap_code(KC_TAB);
-          wait_ms(1000);
-          unregister_code(KC_LALT);
-          unregister_code(KC_LSFT);
+          alt_tab_timer = timer_read();
+          tap_code16(S(KC_TAB));
         }
+
         break;
         
       case CYCLETAB:
@@ -353,11 +356,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_DEFAULT] = LAYOUT(
     
     CYCLEDIAL,
-    TD(TD_ESC_LOCK),   KC_1,      KC_2,      KC_3,   KC_4,   KC_5,   KC_6,   KC_7,   KC_8,      KC_9,      KC_0,            KC_MINS,        KC_EQL,   KC_BSPC, KC_DEL,   KC_HOME,   KC_NLCK, KC_PSLS, KC_PAST, KC_PMNS,
+    TD(TD_ESC_LOCK),   KC_1,      KC_2,      KC_3,   KC_4,   KC_5,   KC_6,   KC_7,   KC_8,      KC_9,      KC_0,            KC_MINS,        KC_EQL,   KC_BSPC,  KC_BSPC,   KC_HOME,   KC_NLCK, KC_PSLS, KC_PAST, KC_PMNS,
     KC_TAB,            KC_Q,      KC_W,      KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,      KC_O,      KC_P,            LBRC,           RBRC,     KC_BSLS,   KC_END,            KC_P7,   KC_P8,   KC_P9,   KC_PPLS,
     LT(1, KC_CAPS),    KC_A,      KC_S,      KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,      KC_L,      KC_SCLN,         TD(TD_QUOTE),   KC_ENT,              KC_PGUP,           KC_P4,   KC_P5,   KC_P6,
     KC_LSPO,           KC_Z,      KC_X,      KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,   KC_DOT,    KC_SLSH,         KC_RSPC,                  KC_UP,     KC_PGDN,           KC_P1,   KC_P2,   KC_P3,   KC_PENT,
-    KC_LCTL,           KC_LGUI,   KC_LALT,                      KC_SPC,                         KC_RALT,   LT(1, KC_APP),   KC_RCTL,        KC_LEFT,  KC_DOWN,   KC_RGHT,                KC_0,        KC_PDOT   
+    KC_LCTL,           KC_LGUI,   KC_LALT,                      KC_SPC,                         KC_RALT,   LT(1, KC_APP),   KC_RCTL,        KC_LEFT,  KC_DOWN,   KC_RGHT,               KC_P0,        KC_PDOT   
     ),
 
   [_FUNC] = LAYOUT(
@@ -388,3 +391,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     */
 };
+
+void matrix_scan_user(void) {
+  if (is_alt_tab_active) {
+    if (timer_elapsed(alt_tab_timer) > 1250) {
+      unregister_code(KC_LALT);
+      is_alt_tab_active = false;
+    }
+  }
+}
