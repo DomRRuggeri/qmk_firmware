@@ -30,7 +30,8 @@ enum dial_modes {
   CYCLEWIN,
   CYCLETAB,
   VOL,
-  UNDOREDO
+  UNDOREDO,
+  SCRUB
 };
 
 bool is_alt_tab_active = false;
@@ -80,6 +81,10 @@ void oled_task_user(void) {
 
       case UNDOREDO:
         oled_write_P(PSTR("Undo/Redo\n"), false);
+        break;
+
+      case SCRUB:
+        oled_write_P(PSTR("Scrub\n"), false);
         break;
     }
 
@@ -163,6 +168,14 @@ void encoder_update_user(uint8_t index, bool clockwise) {
           tap_code16(C(KC_Z));
         }
         break;
+
+      case SCRUB:
+        if (clockwise) {
+          tap_code(KC_RGHT);
+        } else {
+          tap_code(KC_LEFT));
+        }
+        break;
     }
   }
 }
@@ -200,6 +213,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (DIAL_MODE != UNDOREDO) {
             PREV = DIAL_MODE;
             DIAL_MODE = UNDOREDO;
+          } else { 
+            DIAL_MODE = PREV;
+          }
+        }  
+        break;
+      
+    case SCRUB:
+      if (record->event.pressed) {
+        if (DIAL_MODE != SCRUB) {
+            PREV = DIAL_MODE;
+            DIAL_MODE = SCRUB;
           } else { 
             DIAL_MODE = PREV;
           }
@@ -416,7 +440,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,    LCTL(KC_GRV),   KC_TRNS,   KC_MYCM,    DYN_REC_START1,   DYN_REC_STOP,   DYN_MACRO_PLAY1,   KC_TRNS,   KC_TRNS,   KC_TRNS,      KC_PSCR,        KC_TRNS,       LCTL(LSFT(KC_ESC)),   KC_TRNS,   TG(2), KC_P7,   KC_P8,   KC_P9,   KC_PPLS,
     KC_TRNS,   COPYPASTE,      KC_TRNS,   PHRASES,    KC_TRNS,          KC_TRNS,        KC_TRNS,         KC_TRNS,   KC_TRNS,   LGUI(KC_L),   KC_TRNS,        LCTL(KC_F5),   KC_TRNS,                         TG(3),   KC_P4,   KC_P5,   KC_P6,
     KC_TRNS,   CYCLEUNDO,        KC_TRNS,   KC_CALC,    CTRL_CTV,         KC_TRNS,        WINOPEN,         KC_MUTE,   KC_VOLD,   KC_VOLU,      LCTL(KC_GRV),   KC_TRNS,                             KC_PGUP,   KC_NO, KC_P1,   KC_P2,   KC_P3,   KC_PENT,
-    KC_TRNS,   KC_TRNS,        KC_TRNS,                                 KC_TRNS,                                               KC_TRNS,      KC_TRNS,        KC_TRNS,       KC_HOME,              KC_PGDN,   KC_END,  KC_INS,        KC_PDOT 
+    KC_TRNS,   KC_TRNS,        KC_TRNS,                                 KC_TRNS,                                               KC_TRNS,      KC_TRNS,        KC_TRNS,       SCRUB,              KC_PGDN,   SCRUB,  KC_INS,        KC_PDOT 
     ),
 
 		/*
