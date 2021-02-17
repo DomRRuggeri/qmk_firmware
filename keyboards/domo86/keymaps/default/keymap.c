@@ -21,20 +21,24 @@ enum my_keycodes {
   LBRC,
   RBRC,
   COPYPASTE,
-  CYCLEDIAL
+  CYCLEDIAL,
+  CYCLEUNDO
 };
 
 enum dial_modes {
   SCROLL,
   CYCLEWIN,
   CYCLETAB,
-  VOL
+  VOL,
+  UNDOREDO
 };
 
 bool is_alt_tab_active = false;
+bool isRecording = false;
 uint16_t alt_tab_timer = 0;
 
-DIAL_MODE = SCROLL;
+char DIAL_MODE = SCROLL;
+char PREV = SCROLL;
 
 
 #ifdef OLED_DRIVER_ENABLE
@@ -73,16 +77,33 @@ void oled_task_user(void) {
       case VOL:
         oled_write_P(PSTR("Volume\n"), false);
         break;
+
+      case UNDOREDO:
+        oled_write_P(PSTR("Undo/Redo\n"), false);
+        break;
     }
 
   // Host Keyboard LED Status
   uint8_t led_usb_state = host_keyboard_leds();
+
   oled_write_P(led_usb_state & (1<<USB_LED_NUM_LOCK) ? PSTR("NUMLCK ") : PSTR("       "), false);
   oled_write_P(led_usb_state & (1<<USB_LED_CAPS_LOCK) ? PSTR("CAPLCK ") : PSTR("       "), false);
   oled_write_P(led_usb_state & (1<<USB_LED_SCROLL_LOCK) ? PSTR("SCRLCK ") : PSTR("       "), false);
   //oled_write_P(PSTR(" ---- PocBox ----\n Proof of Concept\n"), false);
+  oled_write_P(isRecording ? PSTR("Recording Macro...") : PSTR("                   "), false);
+
+  
+
 }
 #endif
+
+ void dynamic_macro_record_start_user(void) { 
+  isRecording = true;
+ }
+  
+void dynamic_macro_record_end_user(int8_t direction) {
+  isRecording = false;
+  }
 
 void encoder_update_user(uint8_t index, bool clockwise) {
   if (index == 0) {
@@ -96,12 +117,12 @@ void encoder_update_user(uint8_t index, bool clockwise) {
         break;
           
       case CYCLEWIN:
-        
+
+        if (!is_alt_tab_active) {
+          is_alt_tab_active = true;
+          register_code(KC_LALT);
+        }
         if (clockwise) {
-          if (!is_alt_tab_active) {
-            is_alt_tab_active = true;
-            register_code(KC_LALT);
-          }
           alt_tab_timer = timer_read();
           tap_code16(KC_TAB);
         } else {
@@ -132,6 +153,14 @@ void encoder_update_user(uint8_t index, bool clockwise) {
           tap_code(KC_VOLD);
           tap_code(KC_VOLD);
           tap_code(KC_VOLD);
+        }
+        break;
+
+      case UNDOREDO:
+        if (clockwise) {
+          tap_code16(C(KC_Y));
+        } else {
+          tap_code16(C(KC_Z));
         }
         break;
     }
@@ -165,6 +194,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       break;
+
+    case CYCLEUNDO:
+      if (record->event.pressed) {
+        if (DIAL_MODE != UNDOREDO) {
+            PREV = DIAL_MODE;
+            DIAL_MODE = UNDOREDO;
+          } else { 
+            DIAL_MODE = PREV;
+          }
+        }  
+        
+        break;
+      
 
     case PHRASES:
       if (record->event.pressed) {
@@ -265,10 +307,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return true;
 
   }
+
+
+
   return true;
 };
 
 void shutdown_user() {
+
     /*
     rgblight_mode(RGB_Reset[0]);
     rgblight_sethsv(RGB_Reset[1],RGB_Reset[2],RGB_Reset[3]);
@@ -369,8 +415,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_GRV,    KC_F1,          KC_F2,     KC_F3,      LALT(KC_F4),      KC_F5,          KC_F6,           KC_F7,     KC_F8,     KC_F9,        KC_F10,         KC_F11,        KC_F12,               KC_DEL, KC_DEL,    RESET,  KC_NLCK, KC_PSLS, KC_PAST, KC_PMNS,
     KC_TAB,    LCTL(KC_GRV),   KC_TRNS,   KC_MYCM,    DYN_REC_START1,   DYN_REC_STOP,   DYN_MACRO_PLAY1,   KC_TRNS,   KC_TRNS,   KC_TRNS,      KC_PSCR,        KC_TRNS,       LCTL(LSFT(KC_ESC)),   KC_TRNS,   TG(2), KC_P7,   KC_P8,   KC_P9,   KC_PPLS,
     KC_TRNS,   COPYPASTE,      KC_TRNS,   PHRASES,    KC_TRNS,          KC_TRNS,        KC_TRNS,         KC_TRNS,   KC_TRNS,   LGUI(KC_L),   KC_TRNS,        LCTL(KC_F5),   KC_TRNS,                         TG(3),   KC_P4,   KC_P5,   KC_P6,
-    KC_TRNS,   KC_TRNS,        KC_TRNS,   KC_CALC,    CTRL_CTV,         KC_TRNS,        WINOPEN,         KC_MUTE,   KC_VOLD,   KC_VOLU,      LCTL(KC_GRV),   KC_TRNS,                             KC_PGUP,   KC_NO, KC_P1,   KC_P2,   KC_P3,   KC_PENT,
-    KC_TRNS,   KC_TRNS,        KC_TRNS,                                 KC_TRNS,                                               KC_TRNS,      KC_TRNS,        KC_TRNS,       KC_HOME,              KC_PGDN,   KC_END,  KC_0,        KC_PDOT 
+    KC_TRNS,   CYCLEUNDO,        KC_TRNS,   KC_CALC,    CTRL_CTV,         KC_TRNS,        WINOPEN,         KC_MUTE,   KC_VOLD,   KC_VOLU,      LCTL(KC_GRV),   KC_TRNS,                             KC_PGUP,   KC_NO, KC_P1,   KC_P2,   KC_P3,   KC_PENT,
+    KC_TRNS,   KC_TRNS,        KC_TRNS,                                 KC_TRNS,                                               KC_TRNS,      KC_TRNS,        KC_TRNS,       KC_HOME,              KC_PGDN,   KC_END,  KC_INS,        KC_PDOT 
     ),
 
 		/*
@@ -394,7 +440,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void matrix_scan_user(void) {
   if (is_alt_tab_active) {
-    if (timer_elapsed(alt_tab_timer) > 1250) {
+    if (timer_elapsed(alt_tab_timer) > 700) {
       unregister_code(KC_LALT);
       is_alt_tab_active = false;
     }
