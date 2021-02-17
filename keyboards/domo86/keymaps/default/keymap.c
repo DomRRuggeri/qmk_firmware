@@ -171,9 +171,19 @@ void encoder_update_user(uint8_t index, bool clockwise) {
 
       case SCRUB:
         if (clockwise) {
-          tap_code(KC_RGHT);
-        } else {
-          tap_code(KC_LEFT));
+          uint8_t shifted = get_mods() & (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT));
+          if (shifted) {
+            tap_code(KC_L);
+          } else {
+            tap_code(KC_RGHT);
+          }
+        } else { 
+          uint8_t shifted = get_mods() & (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT));
+            if (shifted) {
+              tap_code(KC_J);
+            } else {
+            tap_code(KC_LEFT);
+            }
         }
         break;
     }
