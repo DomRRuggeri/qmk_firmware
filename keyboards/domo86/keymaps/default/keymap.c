@@ -22,7 +22,8 @@ enum my_keycodes {
   RBRC,
   COPYPASTE,
   CYCLEDIAL,
-  CYCLEUNDO
+  CYCLEUNDO,
+  CYCLESCRUB
 };
 
 enum dial_modes {
@@ -229,7 +230,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }  
         break;
       
-    case SCRUB:
+    case CYCLESCRUB:
       if (record->event.pressed) {
         if (DIAL_MODE != SCRUB) {
             PREV = DIAL_MODE;
@@ -450,7 +451,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,    LCTL(KC_GRV),   KC_TRNS,   KC_MYCM,    DYN_REC_START1,   DYN_REC_STOP,   DYN_MACRO_PLAY1,   KC_TRNS,   KC_TRNS,   KC_TRNS,      KC_PSCR,        KC_TRNS,       LCTL(LSFT(KC_ESC)),   KC_TRNS,   TG(2), KC_P7,   KC_P8,   KC_P9,   KC_PPLS,
     KC_TRNS,   COPYPASTE,      KC_TRNS,   PHRASES,    KC_TRNS,          KC_TRNS,        KC_TRNS,         KC_TRNS,   KC_TRNS,   LGUI(KC_L),   KC_TRNS,        LCTL(KC_F5),   KC_TRNS,                         TG(3),   KC_P4,   KC_P5,   KC_P6,
     KC_TRNS,   CYCLEUNDO,        KC_TRNS,   KC_CALC,    CTRL_CTV,         KC_TRNS,        WINOPEN,         KC_MUTE,   KC_VOLD,   KC_VOLU,      LCTL(KC_GRV),   KC_TRNS,                             KC_PGUP,   KC_NO, KC_P1,   KC_P2,   KC_P3,   KC_PENT,
-    KC_TRNS,   KC_TRNS,        KC_TRNS,                                 KC_TRNS,                                               KC_TRNS,      KC_TRNS,        KC_TRNS,       SCRUB,              KC_PGDN,   SCRUB,  KC_INS,        KC_PDOT 
+    KC_TRNS,   KC_TRNS,        KC_TRNS,                                 KC_TRNS,                                               KC_TRNS,      KC_TRNS,        KC_TRNS,       CYCLESCRUB,              KC_PGDN,   CYCLESCRUB,  KC_INS,        KC_PDOT 
     ),
 
 		/*
