@@ -5,7 +5,7 @@
 #define _DEFAULT 0
 #define _FUNC 1
 #define _MEDIA 2
-#define _MUSIC 3
+#define _GTRPRO 3
 
 // Enum Tap Dances
 enum tap_dances {
@@ -23,7 +23,8 @@ enum my_keycodes {
   COPYPASTE,
   CYCLEDIAL,
   CYCLEUNDO,
-  CYCLESCRUB
+  CYCLESCRUB,
+  CYCLEVSCRUB
 };
 
 enum dial_modes {
@@ -32,7 +33,8 @@ enum dial_modes {
   CYCLETAB,
   VOL,
   UNDOREDO,
-  SCRUB
+  SCRUB,
+  VSCRUB
 };
 
 bool is_alt_tab_active = false;
@@ -86,6 +88,10 @@ void oled_task_user(void) {
 
       case SCRUB:
         oled_write_P(PSTR("Scrub\n"), false);
+        break;
+
+      case VSCRUB:
+        oled_write_P(PSTR("Vertical Scrub\n"), false);
         break;
     }
 
@@ -187,6 +193,14 @@ void encoder_update_user(uint8_t index, bool clockwise) {
             }
         }
         break;
+
+      case VSCRUB:
+        if (clockwise) {
+          tap_code16(KC_DOWN);
+        } else {
+          tap_code16(KC_UP);
+        }
+        break;
     }
   }
 }
@@ -246,6 +260,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             PREV = DIAL_MODE;
             DIAL_MODE = SCRUB;
             tap_code(KC_F20);
+          } else { 
+            DIAL_MODE = PREV;
+          }
+        }  
+        
+        break;
+
+    case CYCLEVSCRUB:
+      if (record->event.pressed) {
+        if (DIAL_MODE != vSCRUB) {
+            PREV = DIAL_MODE;
+            DIAL_MODE = VSCRUB;
+            tap_code(KC_F21);
           } else { 
             DIAL_MODE = PREV;
           }
@@ -459,12 +486,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     
     CYCLEDIAL,
     KC_GRV,    KC_F1,          KC_F2,     KC_F3,      LALT(KC_F4),      KC_F5,          KC_F6,           KC_F7,     KC_F8,     KC_F9,        KC_F10,         KC_F11,        KC_F12,               KC_DEL, KC_DEL,    RESET,  KC_NLCK, KC_PSLS, KC_PAST, KC_PMNS,
-    KC_TAB,    LCTL(KC_GRV),   KC_TRNS,   KC_MYCM,    DYN_REC_START1,   DYN_REC_STOP,   DYN_MACRO_PLAY1,   KC_TRNS,   KC_TRNS,   KC_TRNS,      KC_PSCR,        KC_TRNS,       LCTL(LSFT(KC_ESC)),   KC_TRNS,   TG(2), KC_P7,   KC_P8,   KC_P9,   KC_PPLS,
-    KC_TRNS,   COPYPASTE,      KC_TRNS,   PHRASES,    KC_TRNS,          KC_TRNS,        KC_TRNS,         KC_TRNS,   KC_TRNS,   LGUI(KC_L),   KC_TRNS,        LCTL(KC_F5),   KC_TRNS,                         TG(3),   KC_P4,   KC_P5,   KC_P6,
-    KC_TRNS,   CYCLEUNDO,        KC_TRNS,   KC_CALC,    CTRL_CTV,         KC_TRNS,        WINOPEN,         KC_MUTE,   KC_VOLD,   KC_VOLU,      LCTL(KC_GRV),   KC_TRNS,                             KC_PGUP,   KC_NO, KC_P1,   KC_P2,   KC_P3,   KC_PENT,
+    KC_TAB,    LCTL(KC_GRV),   KC_TRNS,   KC_MYCM,    DYN_REC_START1,   DYN_REC_STOP,   DYN_MACRO_PLAY1, KC_TRNS,   KC_TRNS,   KC_TRNS,      KC_PSCR,        KC_TRNS,       LCTL(LSFT(KC_ESC)),   KC_TRNS,   TG(2), KC_P7,   KC_P8,   KC_P9,   KC_PPLS,
+    KC_TRNS,   COPYPASTE,      KC_TRNS,   PHRASES,    KC_TRNS,          TG(3),          KC_TRNS,         KC_TRNS,   KC_TRNS,   LGUI(KC_L),   KC_TRNS,        LCTL(KC_F5),   KC_TRNS,                         TG(3),   KC_P4,   KC_P5,   KC_P6,
+    KC_TRNS,   CYCLEUNDO,      KC_TRNS,   KC_CALC,    CTRL_CTV,         KC_TRNS,        WINOPEN,         KC_MUTE,   KC_VOLD,   KC_VOLU,      LCTL(KC_GRV),   KC_TRNS,                             KC_PGUP,   KC_NO, KC_P1,   KC_P2,   KC_P3,   KC_PENT,
     KC_TRNS,   KC_TRNS,        KC_TRNS,                                 KC_TRNS,                                               KC_TRNS,      KC_TRNS,        KC_TRNS,       CYCLESCRUB,              KC_PGDN,   CYCLESCRUB,  KC_INS,        KC_PDOT 
     ),
 
+  [_GTRPRO] = LAYOUT(
+    CYCLEDIAL,
+    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_BSPC,                  KC_TRNS,    KC_H,       LCTL(LALT(KC_S)),    KC_R,
+    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_F6,      KC_F5,      KC_F2,                  LCTL(KC_DEL),             KC_TRNS,    KC_TRNS,    KC_TRNS,             KC_PPLS,
+    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_F7,      KC_TRNS,                            LCTL(KC_INS),             KC_TRNS,    KC_TRNS,    KC_TRNS,
+    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,                            KC_L,                     KC_TRNS,    KC_TRNS,    KC_TRNS,             KC_PMNS,
+    KC_TRNS,    KC_TRNS,    KC_TRNS,                                 KC_TRNS,                                               KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,                         KC_TRNS,    KC_TRNS 
+    ),
+    
 		/*
   [_MEDIA] = LAYOUT(
     TG(2),     RGB_M_P,   RGB_M_B,   RGB_M_R,   RGB_M_SW,   RGB_M_SN,   RGB_M_K,   RGB_M_X,   RGB_M_G,   KC_NO,   KC_MUTE,   KC_VOLD,   KC_VOLU,   KC_NO, KC_NO,   DEBUG,   
@@ -474,12 +510,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_NO,     KC_NO,     KC_NO,     KC_NO,                             KC_NO,                                    KC_NO,     KC_NO,     KC_H,     KC_J,   KC_L
     ),
 
-[_MUSIC] = LAYOUT(
-    KC_NO,     MU_TOG,  MU_MOD,  KC_NO,  KC_NO,    KC_NO,    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,   KC_NO,   
-    KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO, 
-    KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,     KC_NO,              TG(3),   
-    KC_NO,     PSONG,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO,     KC_NO,                         KC_NO,   KC_NO,   
-    KC_NO,     KC_NO,   KC_NO,                                               KC_NO,                     KC_NO,    KC_NO,     KC_NO,     KC_NO,     KC_NO,   KC_NO
+  [_BLANK] = LAYOUT(
+    KC_TRNS,
+    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,                  KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,
+    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,                              KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,
+    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,                                          KC_TRNS,    KC_TRNS,    KC_TRNS,
+    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,                                          KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,
+    KC_TRNS,    KC_TRNS,    KC_TRNS,                                 KC_TRNS,                                               KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,                         KC_TRNS,    KC_TRNS 
     ),
     */
 };
