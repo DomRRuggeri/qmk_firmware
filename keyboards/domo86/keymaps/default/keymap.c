@@ -202,18 +202,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         switch (DIAL_MODE) {
           case SCROLL:
             DIAL_MODE = CYCLEWIN;
+            tap_code(KC_F16);
             break;
           
           case CYCLEWIN:
             DIAL_MODE = CYCLETAB;
+            tap_code(KC_F17);
             break;
         
           case CYCLETAB:
             DIAL_MODE = VOL;
+            tap_code(KC_F18);
+            break;
+
+          case VOL:
+            DIAL_MODE = SCROLL;
+            tap_code(KC_F15);
             break;
 
           default:
             DIAL_MODE = SCROLL;
+            tap_code(KC_F15);
             break;
         }
       }
@@ -224,6 +233,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (DIAL_MODE != UNDOREDO) {
             PREV = DIAL_MODE;
             DIAL_MODE = UNDOREDO;
+            tap_code(KC_F19);
           } else { 
             DIAL_MODE = PREV;
           }
@@ -235,6 +245,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (DIAL_MODE != SCRUB) {
             PREV = DIAL_MODE;
             DIAL_MODE = SCRUB;
+            tap_code(KC_F20);
           } else { 
             DIAL_MODE = PREV;
           }
