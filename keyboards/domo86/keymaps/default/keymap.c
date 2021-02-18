@@ -56,8 +56,8 @@ void oled_task_user(void) {
     case 1:
       oled_write_P(PSTR("FN\n"), false);
       break;
-    case 2:
-      oled_write_P(PSTR("ADJ\n"), false);
+    case 3:
+      oled_write_P(PSTR("Guitar Pro\n"), false);
       break;
     default:
       // Or use the write_ln shortcut over adding '\n' to the end of your string
