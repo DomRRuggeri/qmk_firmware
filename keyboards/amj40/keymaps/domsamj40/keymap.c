@@ -9,7 +9,8 @@
 
 // Enum Tap Dances
 enum tap_dances {
-  TD_ESC_LOCK = 0
+  TD_ESC_LOCK = 0,
+  TD_CTRL_SPEC
 };
 
 // Enum Macros
@@ -152,13 +153,32 @@ void dance_cmd_reset (qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     unregister_code (KC_ESC);
   } else {
-	 unregister_code (KC_LGUI);
+	  unregister_code (KC_LGUI);
     unregister_code (KC_L);
+  }
+}
+
+void dance_cmd_finished2 (qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    register_code (KC_LCTL);
+  } else {
+	  register_code (KC_LSHIFT);
+    register_code (KC_4);
+  }
+}
+
+void dance_cmd_reset2 (qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    unregister_code (KC_LCTL);
+  } else {
+	  unregister_code (KC_LSHIFT);
+    unregister_code (KC_4);
   }
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_ESC_LOCK]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_cmd_finished, dance_cmd_reset),
+  [TD_CTRL_SPEC]   = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_cmd_finished2, dance_cmd_reset2),
 };
 
 
@@ -168,13 +188,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       TD(TD_ESC_LOCK), KC_Q,    KC_W,         KC_E, KC_R, KC_T,    KC_Y, KC_U,    KC_I,    KC_O,           KC_P,   KC_BSPC,\
       LT(3, KC_TAB),   KC_A,    KC_S,         KC_D, KC_F, KC_G,    KC_H, KC_J,    KC_K,    KC_L,           LT(2, KC_ENT),\
       KC_LSPO,         KC_Z,    KC_X,         KC_C, KC_V, KC_B,    KC_N, KC_M,    KC_SLSH, KC_UP,          KC_RSPC,\
-      KC_LCTL,         KC_LGUI, ALT_T(KC_APP),      LT(1, KC_SPC), LT(2, KC_SPC), KC_LEFT, KC_DOWN,  KC_RGHT \
+      TD(TD_CTRL_SPEC),         KC_LGUI, ALT_T(KC_APP),      LT(1, KC_SPC), LT(2, KC_SPC), KC_LEFT, KC_DOWN,  KC_RGHT \
       ),
 
   // Number Layer
   [1] = LAYOUT( \
       KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL, \
-      KC_TRNS, KC_MINS, KC_EQL,  KC_SCLN, KC_QUOT, KC_TRNS, KC_TRNS, KC_TRNS, KC_SCLN, KC_DQUO, KC_TRNS, \
+      KC_TRNS, KC_MINS, KC_EQL,  KC_SCLN, KC_QUOT, KC_TRNS, KC_TRNS, KC_TRNS, KC_COLN, KC_QUOT, KC_TRNS, \
       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_COMM, KC_DOT, KC_LBRC, KC_RBRC, MT(MOD_RSFT, KC_BSLS), \
       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS\
       ),
@@ -182,8 +202,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // More Layer
   [2] = LAYOUT( \
       KC_TILD, KC_EXLM, KC_AT,     KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,\
-      KC_TRNS, KC_F11,  KC_F12,  DEBUG, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_COLN, KC_QUOT, KC_TRNS, \
-      KC_TRNS, RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_VAI, KC_COMM, KC_DOT, LCTL(KC_GRV), KC_TRNS, KC_PIPE, \
+      KC_TRNS, KC_F11,  KC_F12,  DEBUG, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_SCLN, KC_DQUO, KC_TRNS, \
+      KC_TRNS, RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_VAI, KC_COMM, KC_DOT, KC_INS, KC_TRNS, KC_PIPE, \
       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS\
       ),
 

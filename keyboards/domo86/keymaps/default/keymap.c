@@ -269,7 +269,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case CYCLEVSCRUB:
       if (record->event.pressed) {
-        if (DIAL_MODE != vSCRUB) {
+        if (DIAL_MODE != VSCRUB) {
             PREV = DIAL_MODE;
             DIAL_MODE = VSCRUB;
             tap_code(KC_F21);
