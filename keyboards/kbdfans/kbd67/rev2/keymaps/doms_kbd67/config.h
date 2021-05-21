@@ -1,4 +1,4 @@
-/* Copyright 2018 MechMerlin
+/* Copyright 2019 DomRuggeri
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,4 +17,5 @@
 #pragma once
 
 // place overrides here
-#define TAP_CODE_DELAY 10
+
+#define TAP_CODE_DELAY 15
