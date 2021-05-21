@@ -1,11 +1,6 @@
-# Twain Enterpriser
+# Voidstar Mini Micro
 
-Bluetooth 60% Keyboard with an adafruit feather
-
-Keyboard Maintainer: [DomRRuggeri](https://github.com/DomRRuggeri)
-Inspiration: [SparkTwain](http://sparktwain.com)
-
-Make example for this keyboard (after setting up your build environment):
+Bluetooth 3% Keyboard with an adafruit feather
 
     make twainenterpriser:default
 
